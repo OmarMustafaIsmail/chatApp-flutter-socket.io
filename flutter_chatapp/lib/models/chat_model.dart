@@ -1,9 +1,9 @@
-class Chat {
+class ChatModel {
   String? name;
   bool? isGroup;
   String? message;
   String? icon;
   String? time;
 
-  Chat({this.name, this.message, this.isGroup, this.icon, this.time});
+  ChatModel({this.name, this.message, this.isGroup, this.icon, this.time});
 }
