@@ -31,12 +31,29 @@ class MainScreen extends StatelessWidget {
             ),
             actions: [
               Padding(
-                padding: const EdgeInsets.only(top: 20.0, right: 20.0),
+                padding: const EdgeInsets.only(top: 20.0),
                 child: GestureDetector(
                   onTap: () {},
                   child: const Icon(Icons.search_rounded),
                 ),
               ),
+              Padding(
+                  padding: const EdgeInsets.only(top: 18.0, right: 10.0),
+                  child: PopupMenuButton<String>(
+                    onSelected: (value) => print(value),
+                    itemBuilder: (context) {
+                      return [
+                        const PopupMenuItem<String>(
+                          child: Text("Profile Settings"),
+                          value: "Settings",
+                        ),
+                        const PopupMenuItem<String>(
+                          child: Text("Starred Messages"),
+                          value: "Starred Messages",
+                        ),
+                      ];
+                    },
+                  )),
             ],
             bottom: const TabBar(
               labelColor: Colors.black,
