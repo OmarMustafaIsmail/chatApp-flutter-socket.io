@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chatapp/controllers/camera_controller.dart';
+import 'package:flutter_chatapp/controllers/single_chat_controller.dart';
 import 'package:flutter_chatapp/screens/all_chats/all_chats_screen.dart';
 import 'package:flutter_chatapp/screens/main_screen.dart';
+import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
+
+  Get.put(SingleChatController());
+  Get.put(CameraController());
 }
 
 class MyApp extends StatelessWidget {

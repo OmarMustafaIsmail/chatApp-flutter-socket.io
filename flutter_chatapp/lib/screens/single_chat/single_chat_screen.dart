@@ -1,15 +1,21 @@
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chatapp/controllers/camera_controller.dart';
+import 'package:flutter_chatapp/controllers/single_chat_controller.dart';
 import 'package:flutter_chatapp/models/chat_model.dart';
+import 'package:flutter_chatapp/screens/single_chat/components/attachments_bottomsheet.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SingleChatScreen extends StatelessWidget {
   const SingleChatScreen({required this.chatModel, Key? key}) : super(key: key);
   final ChatModel chatModel;
   @override
   Widget build(BuildContext context) {
+    final CameraController _cameraController = Get.find();
+    final SingleChatController _controller = Get.find();
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -46,84 +52,138 @@ class SingleChatScreen extends StatelessWidget {
           )
         ],
       ),
-      body: Container(
-        color: Colors.blueGrey,
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Stack(
-          children: [
-            ListView(),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Row(
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width - 55,
-                    child: Card(
-                      shadowColor: Colors.transparent,
-                      margin: EdgeInsets.only(bottom: 8, left: 7, right: 7),
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      child: TextFormField(
-                        keyboardType: TextInputType.multiline,
-                        maxLines: 5,
-                        minLines: 1,
-                        textAlignVertical: TextAlignVertical.center,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "Type a message",
-                          prefixIcon: GestureDetector(
-                            child: const Icon(
-                              Icons.emoji_emotions,
-                              color: Colors.grey,
-                            ),
-                            onTap: () {},
-                          ),
-                          suffixIcon: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  Icons.attach_file,
-                                  color: Colors.grey,
+      body: WillPopScope(
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: Container(
+            color: Colors.blueGrey,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Stack(
+              children: [
+                ListView(),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Row(
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width - 55,
+                            child: Card(
+                              shadowColor: Colors.transparent,
+                              margin:
+                                  EdgeInsets.only(bottom: 8, left: 7, right: 7),
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: TextFormField(
+                                controller: _controller.textEditingController,
+                                focusNode: _controller.focusNode,
+                                keyboardType: TextInputType.multiline,
+                                maxLines: 5,
+                                minLines: 1,
+                                textAlignVertical: TextAlignVertical.center,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Type a message",
+                                  prefixIcon: GestureDetector(
+                                    child: const Icon(
+                                      Icons.emoji_emotions,
+                                      color: Colors.grey,
+                                    ),
+                                    onTap: () {
+                                      _controller.isEmojiPickerVisible.value =
+                                          !_controller
+                                              .isEmojiPickerVisible.value;
+                                      _controller.focusNode.unfocus();
+                                      _controller.focusNode.canRequestFocus =
+                                          true;
+                                    },
+                                  ),
+                                  suffixIcon: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        onPressed: () {
+                                          showModalBottomSheet(
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  const AttachementsBottomSheet());
+                                        },
+                                        icon: const Icon(
+                                          Icons.attach_file,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          _cameraController
+                                              .getImage(ImageSource.camera);
+                                        },
+                                        icon: const Icon(Icons.camera_alt,
+                                            color: Colors.grey),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: const Icon(Icons.camera_alt,
-                                    color: Colors.grey),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 8,
+                              right: 3,
+                              left: 2,
+                            ),
+                            child: CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Colors.blue,
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: const Icon(
+                                  Icons.mic,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: 8,
-                      right: 3,
-                      left: 2,
-                    ),
-                    child: CircleAvatar(
-                      radius: 25,
-                      backgroundColor: Colors.blue,
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.mic,
-                          color: Colors.white,
+                    Obx(
+                      () => Offstage(
+                        offstage: _controller.isEmojiPickerVisible.value,
+                        child: SizedBox(
+                          height: 250,
+                          child:
+                              EmojiPicker(onEmojiSelected: (category, emoji) {
+                            _controller.textEditingController.text =
+                                _controller.textEditingController.text +
+                                    emoji.emoji;
+                          }),
                         ),
                       ),
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
         ),
+        onWillPop: () {
+          if (!_controller.isEmojiPickerVisible.value) {
+            _controller.isEmojiPickerVisible.value = true;
+          } else {
+            Get.back();
+          }
+          return Future.value(false);
+        },
       ),
     );
   }
@@ -131,15 +191,16 @@ class SingleChatScreen extends StatelessWidget {
 
 _GetDialog(ChatModel chatModel) {
   return Get.defaultDialog(
-      title: chatModel.name!,
-      content: CircleAvatar(
-        backgroundColor: Colors.grey,
-        child: SvgPicture.asset(
-          "assets/${chatModel.icon}",
-          width: 50,
-        ),
-        radius: 50.0,
+    title: chatModel.name!,
+    content: CircleAvatar(
+      backgroundColor: Colors.grey,
+      child: SvgPicture.asset(
+        "assets/${chatModel.icon}",
+        width: 50,
       ),
-      middleText: "",
-      titlePadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20));
+      radius: 50.0,
+    ),
+    middleText: "",
+    titlePadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+  );
 }

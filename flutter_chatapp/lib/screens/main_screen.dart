@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chatapp/controllers/camera_controller.dart';
 import 'package:flutter_chatapp/screens/all_chats/all_chats_screen.dart';
+import 'package:flutter_chatapp/screens/camera_screen/camera_page.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -54,7 +56,7 @@ class MainScreen extends StatelessWidget {
             ),
           ),
           body: const TabBarView(
-              children: [AllChatsScreen(), AllChatsScreen(), AllChatsScreen()]),
+              children: [CameraPage(), AllChatsScreen(), AllChatsScreen()]),
         ),
       ),
     );
