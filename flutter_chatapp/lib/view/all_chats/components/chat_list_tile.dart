@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chatapp/models/chat_model.dart';
-import 'package:flutter_chatapp/screens/single_chat/single_chat_screen.dart';
+import 'package:flutter_chatapp/view/single_chat/single_chat_screen.dart';
+
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 

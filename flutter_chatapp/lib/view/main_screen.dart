@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chatapp/controllers/camera_controller.dart';
-import 'package:flutter_chatapp/screens/all_chats/all_chats_screen.dart';
-import 'package:flutter_chatapp/screens/camera_screen/camera_page.dart';
+
+import 'package:flutter_chatapp/view/all_chats/all_chats_screen.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -10,9 +10,16 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: DefaultTabController(
-        length: 3,
+        length: 2,
         child: Scaffold(
           appBar: AppBar(
+            leading: Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: GestureDetector(
+                onTap: () {},
+                child: const Icon(Icons.search_rounded),
+              ),
+            ),
             elevation: 0,
             backgroundColor: Colors.transparent,
             foregroundColor: Colors.black,
@@ -20,7 +27,7 @@ class MainScreen extends StatelessWidget {
             title: Padding(
               padding: const EdgeInsets.only(
                 top: 20.0,
-                left: 30,
+                left: 0,
               ),
               child: const Center(
                 child: Text(
@@ -30,13 +37,6 @@ class MainScreen extends StatelessWidget {
               ),
             ),
             actions: [
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: GestureDetector(
-                  onTap: () {},
-                  child: const Icon(Icons.search_rounded),
-                ),
-              ),
               Padding(
                   padding: const EdgeInsets.only(top: 18.0, right: 10.0),
                   child: PopupMenuButton<String>(
@@ -59,12 +59,6 @@ class MainScreen extends StatelessWidget {
               labelColor: Colors.black,
               indicatorColor: Colors.black,
               tabs: [
-                SizedBox(
-                  height: 15,
-                  child: Tab(
-                    icon: Icon(Icons.camera_alt_outlined),
-                  ),
-                ),
                 Tab(
                   text: "Chats",
                 ),
@@ -72,8 +66,8 @@ class MainScreen extends StatelessWidget {
               ],
             ),
           ),
-          body: const TabBarView(
-              children: [CameraPage(), AllChatsScreen(), AllChatsScreen()]),
+          body:
+              const TabBarView(children: [AllChatsScreen(), AllChatsScreen()]),
         ),
       ),
     );

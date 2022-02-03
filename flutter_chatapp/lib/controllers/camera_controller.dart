@@ -11,8 +11,5 @@ class CameraController extends GetxController {
   }
 
   @override
-  void onInit() {
-    // TODO: implement onInit
-    getImage(ImageSource.camera);
-  }
+  void onInit() {}
 }
