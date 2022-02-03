@@ -19,7 +19,7 @@ class SingleChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final CameraController _cameraController = Get.find();
-    final SingleChatController _controller = Get.find();
+    final SingleChatController _controller = Get.put(SingleChatController());
     return Stack(
       children: [
         Image.asset(
@@ -109,6 +109,13 @@ class SingleChatScreen extends StatelessWidget {
                                         borderRadius:
                                             BorderRadius.circular(20)),
                                     child: TextFormField(
+                                      onChanged: (value) {
+                                        if (value.isNotEmpty) {
+                                          _controller.sendButton.value = true;
+                                        } else if (value.isEmpty) {
+                                          _controller.sendButton.value = false;
+                                        }
+                                      },
                                       controller:
                                           _controller.textEditingController,
                                       focusNode: _controller.focusNode,
@@ -176,13 +183,21 @@ class SingleChatScreen extends StatelessWidget {
                                   child: CircleAvatar(
                                     radius: 25,
                                     backgroundColor: Colors.blue,
-                                    child: IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(
-                                        Icons.mic,
-                                        color: Colors.white,
-                                      ),
-                                    ),
+                                    child: _controller.sendButton.value
+                                        ? IconButton(
+                                            onPressed: () {},
+                                            icon: const Icon(
+                                              Icons.send,
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        : IconButton(
+                                            onPressed: () {},
+                                            icon: const Icon(
+                                              Icons.mic,
+                                              color: Colors.white,
+                                            ),
+                                          ),
                                   ),
                                 )
                               ],

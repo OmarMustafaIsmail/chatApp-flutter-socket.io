@@ -10,7 +10,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 
-  Get.put(SingleChatController());
+  // Get.put(SingleChatController());
   Get.put(CameraController());
 }
 
