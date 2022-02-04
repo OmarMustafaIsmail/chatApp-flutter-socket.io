@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chatapp/controllers/camera_controller.dart';
 import 'package:flutter_chatapp/controllers/single_chat_controller.dart';
+import 'package:flutter_chatapp/view/choose_user.dart';
 import 'package:flutter_chatapp/view/main_screen.dart';
 
 import 'package:get/get.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MainScreen(),
+      home: const ChooseUserScreen(),
     );
   }
 }

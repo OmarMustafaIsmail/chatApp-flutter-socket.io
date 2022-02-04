@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chatapp/controllers/camera_controller.dart';
+import 'package:flutter_chatapp/models/chat_model.dart';
 
 import 'package:flutter_chatapp/view/all_chats/all_chats_screen.dart';
 
 class MainScreen extends StatelessWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  MainScreen({
+    required this.chats,
+  });
+  List<ChatModel> chats;
 
   @override
   Widget build(BuildContext context) {
@@ -66,8 +70,14 @@ class MainScreen extends StatelessWidget {
               ],
             ),
           ),
-          body:
-              const TabBarView(children: [AllChatsScreen(), AllChatsScreen()]),
+          body: TabBarView(children: [
+            AllChatsScreen(
+              chats: chats,
+            ),
+            AllChatsScreen(
+              chats: [],
+            )
+          ]),
         ),
       ),
     );
