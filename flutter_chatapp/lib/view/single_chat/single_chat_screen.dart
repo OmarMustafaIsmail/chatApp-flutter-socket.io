@@ -2,6 +2,7 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chatapp/controllers/camera_controller.dart';
+import 'package:flutter_chatapp/controllers/sicket.io_controller.dart';
 import 'package:flutter_chatapp/controllers/single_chat_controller.dart';
 import 'package:flutter_chatapp/models/chat_model.dart';
 import 'package:flutter_chatapp/view/single_chat/components/received_message.dart';
@@ -13,13 +14,30 @@ import 'package:image_picker/image_picker.dart';
 
 import 'components/attachments_bottomsheet.dart';
 
-class SingleChatScreen extends StatelessWidget {
+class SingleChatScreen extends StatefulWidget {
   const SingleChatScreen({required this.chatModel, Key? key}) : super(key: key);
   final ChatModel chatModel;
+
+  @override
+  State<SingleChatScreen> createState() => _SingleChatScreenState();
+}
+
+class _SingleChatScreenState extends State<SingleChatScreen> {
+  late bool isbuttonVisible = false;
+  late SingleChatController _singleChatcontroller;
+
+  @override
+  void initState() {
+    print('MESSAGE BOARD');
+    super.initState();
+    _singleChatcontroller = Get.put(SingleChatController());
+  }
+
   @override
   Widget build(BuildContext context) {
     final CameraController _cameraController = Get.find();
-    final SingleChatController _controller = Get.put(SingleChatController());
+    final SocketController _socketChatcontroller = Get.put(SocketController());
+
     return Stack(
       children: [
         Image.asset(
@@ -33,9 +51,9 @@ class SingleChatScreen extends StatelessWidget {
           appBar: AppBar(
             title: Center(
               child: GestureDetector(
-                onTap: () => _GetDialog(chatModel),
+                onTap: () => _GetDialog(widget.chatModel),
                 child: Text(
-                  chatModel.name!,
+                  widget.chatModel.name!,
                   style: const TextStyle(color: Colors.black),
                 ),
               ),
@@ -110,15 +128,20 @@ class SingleChatScreen extends StatelessWidget {
                                             BorderRadius.circular(20)),
                                     child: TextFormField(
                                       onChanged: (value) {
-                                        if (value.isNotEmpty) {
-                                          _controller.sendButton.value = true;
-                                        } else if (value.isEmpty) {
-                                          _controller.sendButton.value = false;
+                                        if (value.trim().isNotEmpty) {
+                                          setState(() {
+                                            isbuttonVisible = true;
+                                          });
+                                        } else if (value.trim().isEmpty) {
+                                          setState(() {
+                                            isbuttonVisible = false;
+                                          });
                                         }
                                       },
-                                      controller:
-                                          _controller.textEditingController,
-                                      focusNode: _controller.focusNode,
+                                      controller: _singleChatcontroller
+                                          .textEditingController,
+                                      focusNode:
+                                          _singleChatcontroller.focusNode,
                                       keyboardType: TextInputType.multiline,
                                       maxLines: 5,
                                       minLines: 1,
@@ -133,12 +156,14 @@ class SingleChatScreen extends StatelessWidget {
                                             color: Colors.grey,
                                           ),
                                           onTap: () {
-                                            _controller.isEmojiPickerVisible
+                                            _singleChatcontroller
+                                                    .isEmojiPickerVisible
                                                     .value =
-                                                !_controller
+                                                !_singleChatcontroller
                                                     .isEmojiPickerVisible.value;
-                                            _controller.focusNode.unfocus();
-                                            _controller.focusNode
+                                            _singleChatcontroller.focusNode
+                                                .unfocus();
+                                            _singleChatcontroller.focusNode
                                                 .canRequestFocus = true;
                                           },
                                         ),
@@ -170,6 +195,7 @@ class SingleChatScreen extends StatelessWidget {
                                             ),
                                           ],
                                         ),
+                                        contentPadding: EdgeInsets.all(5),
                                       ),
                                     ),
                                   ),
@@ -183,9 +209,20 @@ class SingleChatScreen extends StatelessWidget {
                                   child: CircleAvatar(
                                     radius: 25,
                                     backgroundColor: Colors.blue,
-                                    child: _controller.sendButton.value
+                                    child: isbuttonVisible
                                         ? IconButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              _socketChatcontroller.sendMessage(
+                                                  _singleChatcontroller
+                                                      .textEditingController
+                                                      .text,
+                                                  _singleChatcontroller
+                                                      .currentChat!.id,
+                                                  widget.chatModel.id);
+                                              _singleChatcontroller
+                                                  .textEditingController
+                                                  .clear();
+                                            },
                                             icon: const Icon(
                                               Icons.send,
                                               color: Colors.white,
@@ -204,15 +241,16 @@ class SingleChatScreen extends StatelessWidget {
                             ),
                             Obx(
                               () => Offstage(
-                                offstage:
-                                    _controller.isEmojiPickerVisible.value,
+                                offstage: _singleChatcontroller
+                                    .isEmojiPickerVisible.value,
                                 child: SizedBox(
                                   height: 250,
                                   child: EmojiPicker(
                                       onEmojiSelected: (category, emoji) {
-                                    _controller.textEditingController.text =
-                                        _controller.textEditingController.text +
-                                            emoji.emoji;
+                                    _singleChatcontroller.textEditingController
+                                        .text = _singleChatcontroller
+                                            .textEditingController.text +
+                                        emoji.emoji;
                                   }),
                                 ),
                               ),
@@ -226,8 +264,8 @@ class SingleChatScreen extends StatelessWidget {
               ),
             ),
             onWillPop: () {
-              if (!_controller.isEmojiPickerVisible.value) {
-                _controller.isEmojiPickerVisible.value = true;
+              if (!_singleChatcontroller.isEmojiPickerVisible.value) {
+                _singleChatcontroller.isEmojiPickerVisible.value = true;
               } else {
                 Get.back();
               }

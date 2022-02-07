@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chatapp/controllers/single_chat_controller.dart';
 import 'package:flutter_chatapp/models/chat_model.dart';
 import 'package:flutter_chatapp/view/buttons_card.dart';
 import 'package:flutter_chatapp/view/main_screen.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
 
 class ChooseUserScreen extends StatelessWidget {
   const ChooseUserScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    SingleChatController controller = Get.put(SingleChatController());
     ChatModel currentUser;
     List<ChatModel> chats = [
       ChatModel(
@@ -42,6 +44,8 @@ class ChooseUserScreen extends StatelessWidget {
             onTap: () {
               currentUser = chats.removeAt(index);
               Get.to(() => MainScreen(chats: chats));
+              controller.currentChat = currentUser;
+              print(currentUser.id);
             },
             child:
                 ButtonsCard(icon: Icon(Icons.person), name: chats[index].name!),
