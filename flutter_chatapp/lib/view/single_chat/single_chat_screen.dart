@@ -52,16 +52,19 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
             title: Center(
               child: GestureDetector(
                 onTap: () => _GetDialog(widget.chatModel),
-                child: Text(
-                  widget.chatModel.name!,
-                  style: const TextStyle(color: Colors.black),
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 20.0),
+                  child: Text(widget.chatModel.name!,
+                      style: const TextStyle(
+                        color: Colors.black,
+                      )),
                 ),
               ),
             ),
             elevation: 0,
             backgroundColor: Colors.white,
             leading: Padding(
-              padding: const EdgeInsets.only(left: 10.0, top: 5),
+              padding: const EdgeInsets.only(left: 0.0, top: 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -94,18 +97,23 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
                 child: Column(
                   children: [
                     Expanded(
-                      child: ListView(
-                        children: [
-                          SentMessage(),
-                          ReceivedMessage(),
-                          SentMessage(),
-                          ReceivedMessage(),
-                          SentMessage(),
-                          ReceivedMessage(),
-                          SentMessage(),
-                          ReceivedMessage()
-                        ],
-                      ),
+                      child: Obx(() => ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: _socketChatcontroller.messages.length,
+                          itemBuilder: (context, index) {
+                            if (_socketChatcontroller.messages[index].type ==
+                                "source") {
+                              return SentMessage(
+                                message: _socketChatcontroller
+                                    .messages[index].message,
+                              );
+                            } else {
+                              return ReceivedMessage(
+                                message: _socketChatcontroller
+                                    .messages[index].message!,
+                              );
+                            }
+                          })),
                     ),
                     Align(
                       alignment: Alignment.bottomCenter,

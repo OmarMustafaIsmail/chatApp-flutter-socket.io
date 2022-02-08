@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SentMessage extends StatelessWidget {
-  const SentMessage({Key? key}) : super(key: key);
+  SentMessage({required this.message, Key? key}) : super(key: key);
+  String? message;
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +17,12 @@ class SentMessage extends StatelessWidget {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Stack(
             children: [
-              const Padding(
-                padding:
-                    EdgeInsets.only(left: 15, right: 60, top: 15, bottom: 20),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 15, right: 80, top: 15, bottom: 20),
                 child: Text(
-                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley",
-                  style: TextStyle(color: Colors.black, fontSize: 16),
+                  message!,
+                  style: const TextStyle(color: Colors.black, fontSize: 16),
                 ),
               ),
               Positioned(

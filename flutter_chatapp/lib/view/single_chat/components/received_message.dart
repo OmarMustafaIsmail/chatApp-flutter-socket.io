@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ReceivedMessage extends StatelessWidget {
-  const ReceivedMessage({Key? key}) : super(key: key);
+  ReceivedMessage({required this.message, Key? key}) : super(key: key);
+  String message;
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +19,12 @@ class ReceivedMessage extends StatelessWidget {
           child: Stack(
             // ignore: prefer_const_literals_to_create_immutables
             children: [
-              const Padding(
-                padding:
-                    EdgeInsets.only(left: 15, right: 60, top: 15, bottom: 20),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 15, right: 60, top: 15, bottom: 20),
                 child: Text(
-                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+                  message,
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
               const Positioned(
